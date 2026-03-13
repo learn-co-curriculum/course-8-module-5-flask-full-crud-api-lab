@@ -22,6 +22,10 @@ events = [
 @app.route("/events", methods=["POST"])
 def create_event():
     request_data = request.get_json()   # Data from POST request
+    
+    #Early exit for error conditions.
+    if not request_data or 'title' not in request_data:
+        return jsonify({"error": "Missing title"}), 400
 
     new_id = max([e.id for e in events]) + 1 if events else 1
     request_body = Event(id=new_id, title=request_data['title'])
@@ -38,8 +42,9 @@ def update_event(event_id):
 
     #Finding the event in the array events
     event =  next((e for e in events if e.id == event_id), None)
-    if event == None:
-        return('Event not found', 404)
+
+    if event is None:
+        return jsonify({"error": "Event not found"}), 404
     
     if 'title' in request_data:
         event.title = request_data['title']
@@ -52,12 +57,13 @@ def delete_event(event_id):
 
     #Searching for event
     event = next((e for e in events if e.id == event_id), None)
-    if event == None:
-        return('Event not found', 404)
+    
+    if event is None:
+        return jsonify({"error": "Event not found"}), 404
     
 
     events = next(e for e in events if e.id != event_id)
-    return('Event removed', 204)
+    return 'Event removed', 204
     
 
 if __name__ == "__main__":
