@@ -23,14 +23,14 @@ events = [
 def create_event():
     request_data = request.get_json()   # Data from POST request
 
-    NEW_ID = len(events) + 1
-    request_body = Event(NEW_ID, request_data['title'])
+    new_id = max([e.id for e in events]) + 1 if events else 1
+    request_body = Event(id=new_id, title=request_data['title'])
 
     # Adding data to the In-memory 'database'
     events.append(request_body)
 
     #Returning the response
-    return jsonify(request_body.to_dict())
+    return jsonify(request_body.to_dict()), 201
 
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
@@ -39,11 +39,11 @@ def update_event(event_id):
     #Finding the event in the array events
     event =  next((e for e in events if e.id == event_id), None)
     if event == None:
-        return('Event not found')
+        return('Event not found', 404)
     
     if 'title' in request_data:
         event.title = request_data['title']
-    return jsonify(event.to_dict())
+    return jsonify(event.to_dict()), 200
 
 
 @app.route("/events/<int:event_id>", methods=["DELETE"])
@@ -53,11 +53,11 @@ def delete_event(event_id):
     #Searching for event
     event = next((e for e in events if e.id == event_id), None)
     if event == None:
-        return('Event not found')
+        return('Event not found', 404)
     
 
     events = next(e for e in events if e.id != event_id)
-    return('Event not deleted')
+    return('Event removed', 204)
     
 
 if __name__ == "__main__":
