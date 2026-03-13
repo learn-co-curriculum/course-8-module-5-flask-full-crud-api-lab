@@ -21,34 +21,44 @@ events = [
 # Create a new event from JSON input
 @app.route("/events", methods=["POST"])
 def create_event():
-    # TODO: Task 2 - Design and Develop the Code
+    request_data = request.get_json()   # Data from POST request
 
-    # TODO: Task 3 - Implement the Loop and Process Each Element
+    NEW_ID = len(events) + 1
+    request_body = Event(NEW_ID, request_data['title'])
 
-    # TODO: Task 4 - Return and Handle Results
-    pass
+    # Adding data to the In-memory 'database'
+    events.append(request_body)
 
-# TODO: Task 1 - Define the Problem
-# Update the title of an existing event
+    #Returning the response
+    return jsonify(request_body.to_dict())
+
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
-    # TODO: Task 2 - Design and Develop the Code
+    request_data = request.get_json()
 
-    # TODO: Task 3 - Implement the Loop and Process Each Element
+    #Finding the event in the array events
+    event =  next((e for e in events if e.id == event_id), None)
+    if event == None:
+        return('Event not found')
+    
+    if 'title' in request_data:
+        event.title = request_data['title']
+    return jsonify(event.to_dict())
 
-    # TODO: Task 4 - Return and Handle Results
-    pass
 
-# TODO: Task 1 - Define the Problem
-# Remove an event from the list
 @app.route("/events/<int:event_id>", methods=["DELETE"])
 def delete_event(event_id):
-    # TODO: Task 2 - Design and Develop the Code
+    global events
 
-    # TODO: Task 3 - Implement the Loop and Process Each Element
+    #Searching for event
+    event = next((e for e in events if e.id == event_id), None)
+    if event == None:
+        return('Event not found')
+    
 
-    # TODO: Task 4 - Return and Handle Results
-    pass
+    events = next(e for e in events if e.id != event_id)
+    return('Event not deleted')
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
