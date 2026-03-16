@@ -11,15 +11,30 @@ class Event:
     def to_dict(self):
         return {"id": self.id, "title": self.title}
 
+
 # In-memory "database"
 events = [
     Event(1, "Tech Meetup"),
     Event(2, "Python Workshop")
 ]
 
+
+# GET /
+@app.route("/")
+def welcome():
+    return jsonify({"message": "Welcome to the Event API"}), 200
+
+
+# GET /events
+@app.route("/events", methods=["GET"])
+def get_events():
+    return jsonify([event.to_dict() for event in events]), 200
+
+
 # POST /events
 @app.route("/events", methods=["POST"])
 def create_event():
+
     data = request.get_json()
 
     if not data or "title" not in data:
@@ -36,6 +51,7 @@ def create_event():
 # PATCH /events/<id>
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
+
     data = request.get_json()
 
     if not data or "title" not in data:
