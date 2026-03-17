@@ -1,0 +1,26 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.env
+*.env
+
+# Pipenv
+Pipfile.lock
+
+# VS Code / IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Python testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS / system files
+.DS_Store
+Thumbs.db
