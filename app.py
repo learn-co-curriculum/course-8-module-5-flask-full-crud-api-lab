@@ -20,7 +20,7 @@ events = [
 @app.route("/events", methods=["POST"])
 def create_event():
     data = request.get_json()
-    new_id = max((e for e in events),default=0 ) + 1
+    new_id = max((e.id for e in events),default=0 ) + 1
     new_event = Event(id= new_id, title=data['title'])
     events.append(new_event)
     return jsonify(new_event.to_dict()), 201 
@@ -30,7 +30,7 @@ def update_event(event_id):
     data = request.get_json()
     event = next((e for e in events if e.id == event_id), None)
     if not event:
-        return("No event found", 404)
+        return jsonify({"error": "Event not found"}), 404
     if "title" in data:
         event.title = data["title"]
     return jsonify(event.to_dict())
@@ -40,9 +40,9 @@ def delete_event(event_id):
     global events
     event = next((e for e in events if e.id == event_id), None)
     if not event:
-        return ("Event not found", 404)
-    events = [e for e in events if e.id != event_id]
-    return ("Event deleted", 204)
+        return jsonify({"error": "Event not found"}), 404
+    events.remove(event)
+    return ("", 204)
     
 if __name__ == "__main__":
     app.run(debug=True)
