@@ -28,7 +28,7 @@ def create_event():
     new_id = max(event.id for event in events) + 1 if events else 1
     new_event = Event(new_id, data["title"])
     events.append(new_event)
-    return jsonify(new_event.to_dict()), 201
+    return jsonify(new_event.to_dict()), 201 # Created
 
 
 # PATCH /events/<id> - Update an event title
@@ -40,7 +40,7 @@ def update_event(event_id):
         if event.id == event_id:
             if data and "title" in data:
                 event.title = data["title"]
-            return jsonify(event.to_dict()), 200
+            return jsonify(event.to_dict()), 200 # OK
     return jsonify({"error": "Event not found"}), 404
 
 
