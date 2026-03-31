@@ -71,7 +71,7 @@ def delete_event(event_id):
 
     events.remove(event)
 
-    return jsonify({"message": "Event deleted"}), 200
+    return jsonify({"message": "Event deleted"}), 204
 
 
 if __name__ == "__main__":
