@@ -129,6 +129,52 @@ Test your endpoints using Postman or curl:
   - Body: `{ "title": "Hackathon 2025" }`
 - `DELETE http://localhost:5000/events/2`
 
+### Example Requests and Responses
+
+**Create a new event**
+
+```http
+POST /events HTTP/1.1
+Content-Type: application/json
+
+{ "title": "Hackathon" }
+```
+
+```json
+HTTP/1.1 201 Created
+{
+  "id": 3,
+  "title": "Hackathon"
+}
+```
+
+**Update an event title**
+
+```http
+PATCH /events/1 HTTP/1.1
+Content-Type: application/json
+
+{ "title": "Hackathon 2025" }
+```
+
+```json
+HTTP/1.1 200 OK
+{
+  "id": 1,
+  "title": "Hackathon 2025"
+}
+```
+
+**Delete an event**
+
+```http
+DELETE /events/2 HTTP/1.1
+```
+
+```http
+HTTP/1.1 204 No Content
+```
+
 ---
 
 ## Best Practices
