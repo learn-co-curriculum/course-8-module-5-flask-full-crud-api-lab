@@ -17,38 +17,61 @@ events = [
     Event(2, "Python Workshop")
 ]
 
-# TODO: Task 1 - Define the Problem
 # Create a new event from JSON input
 @app.route("/events", methods=["POST"])
 def create_event():
-    # TODO: Task 2 - Design and Develop the Code
 
-    # TODO: Task 3 - Implement the Loop and Process Each Element
+    data = request.get_json() #reads the incoming JSON
+    event_id = max((event.id for event in events), default=0) + 1 #auto-generate ID
+    title = data.get("title")
 
-    # TODO: Task 4 - Return and Handle Results
-    pass
+    #creating event object and appending it to the list
+    new_event = Event(id=event_id, title=title)
+    events.append(new_event)
 
-# TODO: Task 1 - Define the Problem
+    return jsonify(new_event.to_dict()), 201
+
+
 # Update the title of an existing event
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
-    # TODO: Task 2 - Design and Develop the Code
+    event = next((e for e in events if e.id == id), None)
 
-    # TODO: Task 3 - Implement the Loop and Process Each Element
+    if event is None:
+        return jsonify ({"error": "Event not found"}), 404
+    
+    data = request.get_json()
+    #log.info("update_event_request", id=id, request_data=data)
 
-    # TODO: Task 4 - Return and Handle Results
-    pass
+    if "eventTitle" in data:
+        event.title = data["eventTitle"]
+    
+    return jsonify (event.to_dict()), 200
+    
 
-# TODO: Task 1 - Define the Problem
 # Remove an event from the list
 @app.route("/events/<int:event_id>", methods=["DELETE"])
 def delete_event(event_id):
-    # TODO: Task 2 - Design and Develop the Code
+    global events
 
-    # TODO: Task 3 - Implement the Loop and Process Each Element
+    event = next((e for e in events if e.id ==id), None)
 
-    # TODO: Task 4 - Return and Handle Results
-    pass
+    if event is None:
+        return jsonify({"error": "Event not found"}), 404
+
+    events = [e for e in events if e.id != id]
+
+    return jsonify ({"message": f"Event {id} deleted"}), 200
+
+# View for getting details of an event that matches ID in URL - GET
+@app.route("/customers/<int:id>", methods=["GET"])
+def get_event(id):
+    event = next((e for e in events if e.id == id), None) #looping to find customer with the id
+
+    if event is None:
+        return jsonify({"error": "Event not found. Please try again"}), 404 #confirm on error message display
+
+    return jsonify(event.to_dict()), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
