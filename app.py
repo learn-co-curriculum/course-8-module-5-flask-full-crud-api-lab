@@ -47,6 +47,13 @@ def create_event():
 
     return jsonify(new_event.to_dict()), 201
 
+
+# List all events
+@app.route("/events", methods=["GET"])
+def list_events():
+    """Return a JSON array of all events."""
+    return jsonify([event.to_dict() for event in events]), 200
+
 # Update the title of an existing event
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
