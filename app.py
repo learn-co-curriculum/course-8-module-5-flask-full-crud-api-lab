@@ -1,6 +1,5 @@
 
-
-    from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -42,9 +41,9 @@ def create_event():
     return jsonify(new_event.to_dict()), 201
 
 
-# PATCH /events/<id> - Update the title of an event
-@app.route('/events/<int:id>', methods=['PATCH'])
-def update_event(id):
+# PATCH /events/<event_id> - Update the title of an event
+@app.route('/events/<int:event_id>', methods=['PATCH'])
+def update_event(event_id):
     # Parse JSON data from the request body
     data = request.get_json()
     
@@ -54,30 +53,32 @@ def update_event(id):
 
     # Search for the event matching the provided ID
     for event in events:
-        if event.id == id:
+        if event.id == event_id:
             # Update the event's title
             event.title = data['title']
             # Return the updated event object with a 200 OK status code
             return jsonify(event.to_dict()), 200
             
     # If no event matches the ID, return a 404 Not Found error
-    return jsonify({"error": "Not Found", "message": f"Event with ID {id} does not exist"}), 404
+    return jsonify({"error": "Not Found", "message": f"Event with ID {event_id} does not exist"}), 404
 
 
-# DELETE /events/<id> - Remove an event from the list
-@app.route('/events/<int:id>', methods=['DELETE'])
-def delete_event(id):
+# DELETE /events/<event_id> - Remove an event from the list
+@app.route('/events/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
     # Search for the event matching the provided ID
     for event in events:
-        if event.id == id:
+        if event.id == event_id:
             # Remove the event from our in-memory list
             events.remove(event)
             # Return a success message with a 200 OK status code
-            return jsonify({"message": f"Event with ID {id} has been deleted successfully"}), 200
+            return jsonify({"message": f"Event with ID {event_id} has been deleted successfully"}), 200
             
     # If no event matches the ID, return a 404 Not Found error
-    return jsonify({"error": "Not Found", "message": f"Event with ID {id} does not exist"}), 404
+    return jsonify({"error": "Not Found", "message": f"Event with ID {event_id} does not exist"}), 404
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+ 
+
