@@ -41,18 +41,13 @@ Ensure Python is installed:
 python --version
 ```
 
-Install Flask and dependencies using pipenv:
+Install Flask and dependencies using pip:
 
 ```bash
-pipenv install
-pipenv shell
+pip install -r requirements.txt
 ```
 
-Or with pip:
-
-```bash
-pip install flask
-```
+This will install Flask, pytest, and the `event-api` package in editable mode, making the app importable from anywhere.
 
 ## Tasks
 
@@ -113,7 +108,28 @@ if __name__ == "__main__":
 
 ---
 
-### Task 4: Test the API
+### Task 4: Run Automated Tests
+
+Run the test suite to validate the implementation:
+
+```bash
+pytest
+```
+
+For verbose output:
+
+```bash
+pytest -v
+```
+
+All 5 tests should pass:
+- `test_create_event` - Validates POST /events returns 201 with new event
+- `test_update_event` - Validates PATCH /events/<id> updates event title
+- `test_update_event_not_found` - Validates PATCH returns 404 for non-existent event
+- `test_delete_event` - Validates DELETE /events/<id> returns 204
+- `test_delete_event_not_found` - Validates DELETE returns 404 for non-existent event
+
+### Task 5: Manual Testing
 
 Start the Flask development server:
 
@@ -128,6 +144,52 @@ Test your endpoints using Postman or curl:
 - `PATCH http://localhost:5000/events/1`
   - Body: `{ "title": "Hackathon 2025" }`
 - `DELETE http://localhost:5000/events/2`
+
+### Example Requests and Responses
+
+**Create a new event**
+
+```http
+POST /events HTTP/1.1
+Content-Type: application/json
+
+{ "title": "Hackathon" }
+```
+
+```json
+HTTP/1.1 201 Created
+{
+  "id": 3,
+  "title": "Hackathon"
+}
+```
+
+**Update an event title**
+
+```http
+PATCH /events/1 HTTP/1.1
+Content-Type: application/json
+
+{ "title": "Hackathon 2025" }
+```
+
+```json
+HTTP/1.1 200 OK
+{
+  "id": 1,
+  "title": "Hackathon 2025"
+}
+```
+
+**Delete an event**
+
+```http
+DELETE /events/2 HTTP/1.1
+```
+
+```http
+HTTP/1.1 204 No Content
+```
 
 ---
 
