@@ -20,19 +20,21 @@ events = [
 # Create a new event from JSON input
 @app.route("/events", methods=["POST"])
 def create_event():
-    data = request.get_json()
-    if not data or "title" not in data:
+    data = request.get_json(silent=True) or {}
+    title = data.get("title")
+    if not title:
         return jsonify({"error": "Title is required"}), 400
     new_id = len(events) + 1 if events else 1
-    new_event = Event(new_id, data["title"])
+    new_event = Event(new_id, title)
     events.append(new_event)
     return jsonify(new_event.to_dict()), 201
 
 # Update the title of an existing event
 @app.route("/events/<int:event_id>", methods=["PATCH"])
 def update_event(event_id):
-    data = request.get_json()
-    if not data or "title" not in data:
+    data = request.get_json(silent=True) or {}
+    title = data.get("title")
+    if not title:
         return jsonify({"error": "Title is required"}), 400
     for event in events:
         if event.id == event_id:
