@@ -34,7 +34,7 @@ def get_title():
 
 @app.route("/events", methods=["GET"] )
 def list_events():
-    return jsonify([event.to_dict() for event in events])
+    return jsonify([event.to_dict() for event in events] )
 
 
 @app.route("/events/<int:event_id>", methods=["GET"])
